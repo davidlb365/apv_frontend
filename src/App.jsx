@@ -22,24 +22,22 @@ function App() {
         <BrowserRouter>
             <SpinProvider>
                 <AuthProvider>
-                    <PacientesProvider>
-                        <Routes>
-                            {/* public */}
-                            <Route path='/' element={<AuthLayout></AuthLayout>}>
-                                <Route index element={<Login />} />
-                                <Route path='registrar' element={<Registrar/>} />
-                                <Route path='olvide-password' element={<OlvidePassword/>} />
-                                <Route path='olvide-password/:token' element={<NuevoPassword/>} />
-                                <Route path='confirmar/:id' element={<ConfirmarCuenta/>} />
-                            </Route>
-                            {/* private */}
-                            <Route path='/admin' element={<RutaProtegida></RutaProtegida>}>
-                                <Route index element={<AdministrarPacientes />} />
-                                <Route path='perfil' element={<EditarPerfil />} />
-                                <Route path='cambiar-password' element={<CambiarPassword />} />
-                            </Route>
-                        </Routes>
-                    </PacientesProvider>
+                    <Routes>
+                        {/* public */}
+                        <Route path='/' element={<AuthLayout></AuthLayout>}>
+                            <Route index element={<Login />} />
+                            <Route path='registrar' element={<Registrar/>} />
+                            <Route path='olvide-password' element={<OlvidePassword/>} />
+                            <Route path='olvide-password/:token' element={<NuevoPassword/>} />
+                            <Route path='confirmar/:id' element={<ConfirmarCuenta/>} />
+                        </Route>
+                        {/* private */}
+                        <Route path='/admin' element={<RutaProtegida></RutaProtegida>}>
+                            <Route index element={<PacientesProvider><AdministrarPacientes /></PacientesProvider>} />
+                            <Route path='perfil' element={<EditarPerfil />} />
+                            <Route path='cambiar-password' element={<CambiarPassword />} />
+                        </Route>
+                    </Routes>
                 </AuthProvider>
             </SpinProvider>
         </BrowserRouter>

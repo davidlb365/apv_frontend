@@ -18,7 +18,6 @@ const OlvidePassword = () => {
         try {
             setSpinning(true)
             const {data} = await clienteAxios.post('/veterinarios/olvide-password', {email})
-            console.log(data)
             setAlerta({msg: data.msg})
         } catch (error) {
             setAlerta({

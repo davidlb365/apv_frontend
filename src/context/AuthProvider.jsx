@@ -1,11 +1,13 @@
 import {useState, useEffect, createContext} from 'react'
 import clienteAxios from '../config/axios'
+import useSpin from '../hooks/useSpin'
 
 const AuthContext = createContext()
 
 const AuthProvider = ({children}) => {
     const [cargando, setCargando] = useState(true)
     const [auth, setAuth] = useState({})
+    const {setSpinning} = useSpin()
 
     useEffect(() => {
         const autenticarUsuario = async () => {
@@ -21,11 +23,14 @@ const AuthProvider = ({children}) => {
                 }
             }
             try {
+                setSpinning(true)
                 const {data} = await clienteAxios('/veterinarios/perfil', config)
                 setAuth(data)
             } catch (error) {
                 console.log(error.response.data.msg)
                 setAuth({})
+            } finally {
+                setSpinning(false)
             }
 
             setCargando(false)
@@ -51,6 +56,7 @@ const AuthProvider = ({children}) => {
             }
         }
         try {
+            setSpinning(true)
             const url = `/veterinarios/perfil/${datos._id}`
             const {data} = await clienteAxios.put(url, datos, config)
             return {
@@ -62,6 +68,8 @@ const AuthProvider = ({children}) => {
                 msg: error.response.data.msg,
                 error: true
             }
+        } finally {
+            setSpinning(false)
         }
     }
 
@@ -79,6 +87,7 @@ const AuthProvider = ({children}) => {
         }
 
         try {
+            setSpinning(true)
             const url = '/veterinarios/actualizar-password'
             const {data} = await clienteAxios.put(url, datos, config)
             console.log(data)
@@ -90,6 +99,8 @@ const AuthProvider = ({children}) => {
                 msg: error.response.data.msg,
                 error: true
             }
+        } finally {
+            setSpinning(false)
         }
     }
 

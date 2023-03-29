@@ -1,18 +1,22 @@
 import {useEffect, useState} from 'react'
 import {useParams, Link} from 'react-router-dom'
 import Alerta from '../components/Alerta'
+import Spinner from '../components/Spinner'
 import clienteAxios from '../config/axios'
+import useSpin from '../hooks/useSpin'
 
 const ConfirmarCuenta = () => {
     const [cuentaConfirmada, setCuentaConfirmada] = useState(false)
     const [cargando, setCargando] = useState(true)
     const [alerta, setAlerta] = useState({})
+    const {spinning, setSpinning} = useSpin()
     const params = useParams()
     const {id} = params
 
     useEffect(() => {
         const confirmarCuenta = async () => {
             try {
+                setSpinning(true)
                 const url = `/veterinarios/confirmar/${id}`
                 const {data} = await clienteAxios(url)
                 setCuentaConfirmada(true)
@@ -24,6 +28,8 @@ const ConfirmarCuenta = () => {
                     msg: error.response.data.msg,
                     error: true
                 })
+            } finally {
+                setSpinning(false)
             }
             setCargando(false)
         }
@@ -43,6 +49,7 @@ const ConfirmarCuenta = () => {
                     <Link to="/" className='block text-center my-5 text-gray-500 hover:text-gray-800'>Iniciar Sesión</Link>
                 )}
             </div>
+            {spinning && <Spinner />}
       </>
     )
   }

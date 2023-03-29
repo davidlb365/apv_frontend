@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import Alerta from "../components/Alerta"
+import Spinner from "../components/Spinner"
 import clienteAxios from "../config/axios"
+import useSpin from "../hooks/useSpin"
 
 const NuevoPassword = () => {
     const [password, setPassword] = useState('')
     const[alerta, setAlerta] = useState({})
     const [tokenValido, setTokenValido] = useState(false)
     const [passwordModificado, setPasswordModificado] = useState(false)
+    const {spinning, setSpinning} = useSpin()
     const params = useParams()
 
     const {token} = params
@@ -15,6 +18,7 @@ const NuevoPassword = () => {
     useEffect(() => {
         const comprobarToken = async () => {
             try {
+                setSpinning(true)
                 await clienteAxios(`/veterinarios/olvide-password/${token}`)
                 setAlerta({
                     msg: 'Coloca tu nuevo Password'
@@ -25,6 +29,8 @@ const NuevoPassword = () => {
                     msg: 'Hubo un error con el enlace',
                     error: true
                 })
+            } finally {
+                setSpinning(false)
             }
         }
         comprobarToken()
@@ -40,6 +46,7 @@ const NuevoPassword = () => {
             return
         }
         try {
+            setSpinning(true)
             const url = `/veterinarios/olvide-password/${token}`
             const {data} = await clienteAxios.post(url,{password})
             setAlerta({
@@ -51,6 +58,8 @@ const NuevoPassword = () => {
                 msg: error.response.data.msg,
                 error: true
             })
+        } finally {
+            setSpinning(false)
         }
     }
     const {msg} = alerta
@@ -78,6 +87,7 @@ const NuevoPassword = () => {
             </>
             }
         </div>
+        {spinning && <Spinner />}
     </>
     )
 }

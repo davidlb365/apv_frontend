@@ -1,11 +1,14 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import Alerta from "../components/Alerta"
+import Spinner from "../components/Spinner"
 import clienteAxios from "../config/axios"
+import useSpin from "../hooks/useSpin"
 
 const OlvidePassword = () => {
     const [email, setEmail] = useState('')
     const [alerta, setAlerta] = useState({})
+    const {spinning, setSpinning} = useSpin()
     const handleSubmit = async e => {
         e.preventDefault()
         if(email === '' || email.length < 6) {
@@ -13,6 +16,7 @@ const OlvidePassword = () => {
             return
         }
         try {
+            setSpinning(true)
             const {data} = await clienteAxios.post('/veterinarios/olvide-password', {email})
             console.log(data)
             setAlerta({msg: data.msg})
@@ -21,6 +25,8 @@ const OlvidePassword = () => {
                 msg: error.response.data.msg,
                 error: true
             })
+        } finally {
+            setSpinning(false)
         }
     }
     const {msg} = alerta
@@ -44,6 +50,7 @@ const OlvidePassword = () => {
                 <Link to="/registrar" className='block text-center my-5 text-gray-500 hover:text-gray-800'>¿No tienes una cuenta? Regístrate!</Link>
             </nav>
         </div>
+        {spinning && <Spinner />}
     </>
     )
 }

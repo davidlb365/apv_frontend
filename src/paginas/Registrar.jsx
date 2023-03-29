@@ -2,6 +2,8 @@ import {useState} from 'react'
 import { Link } from "react-router-dom"
 import clienteAxios from '../config/axios'
 import Alerta from '../components/Alerta'
+import Spinner from '../components/Spinner'
+import useSpin from '../hooks/useSpin'
 
 const Registrar = () => {
     const [nombre, setNombre] = useState('')
@@ -9,6 +11,7 @@ const Registrar = () => {
     const [password, setPassword] = useState('')
     const [repetirPassword, setRepetirPassword] = useState('')
     const [alerta, setAlerta] = useState({})
+    const {spinning, setSpinning} = useSpin()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -29,6 +32,7 @@ const Registrar = () => {
         // Crear el usuario en la api
 
         try {
+            setSpinning(true)
             const url = `/veterinarios`
             await clienteAxios.post(url, {nombre, email, password})
             setAlerta({
@@ -40,6 +44,8 @@ const Registrar = () => {
                 msg: error.response.data.msg,
                 error: true
             })
+        } finally {
+            setSpinning(false)
         }
 
     }
@@ -79,7 +85,7 @@ const Registrar = () => {
                     <Link to="/olvide-password" className='block text-center my-5 text-gray-500 hover:text-gray-800'>Olvidé mi Password</Link>
                 </nav>
             </div>
-
+            {spinning && <Spinner />}
         </>
     )
   }

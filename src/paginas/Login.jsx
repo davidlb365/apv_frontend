@@ -3,12 +3,15 @@ import {Link, useNavigate} from 'react-router-dom'
 import Alerta from '../components/Alerta'
 import useAuth from  '../hooks/useAuth'
 import clienteAxios from '../config/axios'
+import Spinner from '../components/Spinner'
+import useSpin from '../hooks/useSpin'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [alerta, setAlerta] = useState({})
     const {setAuth} = useAuth()
+    const {spinning, setSpinning} = useSpin()
 
     const navigate = useNavigate()
 
@@ -22,16 +25,19 @@ const Login = () => {
             return
         }
         try {
+            setSpinning(true)
             const {data} = await clienteAxios.post('/veterinarios/login', {email, password})
             localStorage.setItem('token', data.token)
             setAuth(data)
             console.log(data)
+            setSpinning(false)
             navigate('/admin')
         } catch (error) {
             setAlerta({
                 msg: error.response.data.msg,
                 error: true
             })
+            setSpinning(false)
         }
         
     }
@@ -63,6 +69,7 @@ const Login = () => {
                     <Link to="/olvide-password" className='block text-center my-5 text-gray-500 hover:text-gray-800'>Olvidé mi Password</Link>
                 </nav>
             </div>  
+            {spinning && <Spinner />}
         </>
     )
 }

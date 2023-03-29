@@ -2,11 +2,14 @@ import { useEffect, useState } from "react"
 import AdminNav from "../components/AdminNav"
 import useAuth from '../hooks/useAuth'
 import Alerta from "../components/Alerta"
+import Spinner from "../components/Spinner"
+import useSpin from "../hooks/useSpin"
 
 const EditarPerfil = () => {
     const {auth, actualizarPerfil} = useAuth()
     const [perfil, setPerfil] = useState({})
     const [alerta, setAlerta] = useState({})
+    const {spinning} = useSpin()
 
     useEffect(() => {
         setPerfil(auth)
@@ -65,10 +68,11 @@ const EditarPerfil = () => {
                                 [e.target.name]: e.target.value
                             })} />
                         </div>
-                        <input type="submit" value="Guardar Cambios" className="bg-indigo-700 px-10 py-3 font-bold text-white rounded-lg uppercase w-full mt-5" />
+                        <input type="submit" value="Guardar Cambios" className="bg-indigo-700 hover:bg-indigo-800 px-10 py-3 font-bold text-white rounded-lg uppercase w-full mt-5 cursor-pointer" />
                     </form>
                 </div>
             </div>
+            {spinning && <Spinner />}
         </>
     )
 }

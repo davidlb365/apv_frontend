@@ -23,16 +23,12 @@ const AuthProvider = ({children}) => {
                 }
             }
             try {
-                setSpinning(true)
                 const {data} = await clienteAxios('/veterinarios/perfil', config)
                 setAuth(data)
             } catch (error) {
                 console.log(error.response.data.msg)
                 setAuth({})
-            } finally {
-                setSpinning(false)
-            }
-
+            } 
             setCargando(false)
         }
         autenticarUsuario()
